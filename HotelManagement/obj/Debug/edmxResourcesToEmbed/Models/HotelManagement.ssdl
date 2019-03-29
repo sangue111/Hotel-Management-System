@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HotelModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Charge">
+    <Key>
+      <PropertyRef Name="ChargeID" />
+    </Key>
+    <Property Name="ChargeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ServiceID" Type="int" />
+    <Property Name="date" Type="datetime" />
+    <Property Name="units" Type="int" />
+    <Property Name="quantity" Type="int" />
+    <Property Name="ReservationID" Type="int" />
+  </EntityType>
+  <EntityType Name="Customerz">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+    </Key>
+    <Property Name="CustomerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Email" Type="nvarchar" MaxLength="50" />
+    <Property Name="Company" Type="nvarchar" MaxLength="50" />
+    <Property Name="Discount" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="Password" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Invoice">
+    <Key>
+      <PropertyRef Name="InvoiceNumber" />
+    </Key>
+    <Property Name="InvoiceNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PaymentDate" Type="datetime" />
+    <Property Name="Total" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="Status" Type="nvarchar" MaxLength="50" />
+    <Property Name="PaymentID" Type="int" />
+  </EntityType>
+  <EntityType Name="Payment">
+    <Key>
+      <PropertyRef Name="PaymentID" />
+    </Key>
+    <Property Name="PaymentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PaymentType" Type="nvarchar" MaxLength="50" />
+    <Property Name="Description" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Reservationz">
+    <Key>
+      <PropertyRef Name="ReservationID" />
+    </Key>
+    <Property Name="ReservationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ArrivalDate" Type="datetime" />
+    <Property Name="DepartureDate" Type="datetime" />
+    <Property Name="CustomizedPrice" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="status" Type="nvarchar" MaxLength="50" />
+    <Property Name="CustomerID" Type="int" />
+    <Property Name="InvoiceNumber" Type="int" />
+    <Property Name="RoomNumber" Type="int" />
+  </EntityType>
+  <EntityType Name="Room">
+    <Key>
+      <PropertyRef Name="RoomNumber" />
+    </Key>
+    <Property Name="RoomNumber" Type="int" Nullable="false" />
+    <Property Name="floor" Type="int" />
+    <Property Name="Capacity" Type="int" />
+    <Property Name="RoomTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RoomType">
+    <Key>
+      <PropertyRef Name="RoomTypeID" />
+    </Key>
+    <Property Name="RoomTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="50" />
+    <Property Name="RoomPrice" Type="decimal" Precision="18" Scale="0" />
+  </EntityType>
+  <EntityType Name="Service">
+    <Key>
+      <PropertyRef Name="ServiceID" />
+    </Key>
+    <Property Name="ServiceID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="50" />
+    <Property Name="UnitPrice" Type="decimal" Precision="18" Scale="0" />
+  </EntityType>
+  <Association Name="FK_Charge_Reservation">
+    <End Role="Reservationz" Type="Self.Reservationz" Multiplicity="0..1" />
+    <End Role="Charge" Type="Self.Charge" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Reservationz">
+        <PropertyRef Name="ReservationID" />
+      </Principal>
+      <Dependent Role="Charge">
+        <PropertyRef Name="ReservationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Charge_Service">
+    <End Role="Service" Type="Self.Service" Multiplicity="0..1" />
+    <End Role="Charge" Type="Self.Charge" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Service">
+        <PropertyRef Name="ServiceID" />
+      </Principal>
+      <Dependent Role="Charge">
+        <PropertyRef Name="ServiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Invoice_Payment">
+    <End Role="Payment" Type="Self.Payment" Multiplicity="0..1" />
+    <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Payment">
+        <PropertyRef Name="PaymentID" />
+      </Principal>
+      <Dependent Role="Invoice">
+        <PropertyRef Name="PaymentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Reservationz_Customerz">
+    <End Role="Customerz" Type="Self.Customerz" Multiplicity="0..1" />
+    <End Role="Reservationz" Type="Self.Reservationz" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customerz">
+        <PropertyRef Name="CustomerID" />
+      </Principal>
+      <Dependent Role="Reservationz">
+        <PropertyRef Name="CustomerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Reservationz_Invoice">
+    <End Role="Invoice" Type="Self.Invoice" Multiplicity="0..1" />
+    <End Role="Reservationz" Type="Self.Reservationz" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Invoice">
+        <PropertyRef Name="InvoiceNumber" />
+      </Principal>
+      <Dependent Role="Reservationz">
+        <PropertyRef Name="InvoiceNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Reservationz_Room">
+    <End Role="Room" Type="Self.Room" Multiplicity="0..1" />
+    <End Role="Reservationz" Type="Self.Reservationz" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Room">
+        <PropertyRef Name="RoomNumber" />
+      </Principal>
+      <Dependent Role="Reservationz">
+        <PropertyRef Name="RoomNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Room_RoomType">
+    <End Role="RoomType" Type="Self.RoomType" Multiplicity="1" />
+    <End Role="Room" Type="Self.Room" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RoomType">
+        <PropertyRef Name="RoomTypeID" />
+      </Principal>
+      <Dependent Role="Room">
+        <PropertyRef Name="RoomTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="HotelModelStoreContainer">
+    <EntitySet Name="Charge" EntityType="Self.Charge" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Customerz" EntityType="Self.Customerz" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Invoice" EntityType="Self.Invoice" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Payment" EntityType="Self.Payment" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Reservationz" EntityType="Self.Reservationz" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Room" EntityType="Self.Room" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RoomType" EntityType="Self.RoomType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Service" EntityType="Self.Service" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Charge_Reservation" Association="Self.FK_Charge_Reservation">
+      <End Role="Reservationz" EntitySet="Reservationz" />
+      <End Role="Charge" EntitySet="Charge" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Charge_Service" Association="Self.FK_Charge_Service">
+      <End Role="Service" EntitySet="Service" />
+      <End Role="Charge" EntitySet="Charge" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Invoice_Payment" Association="Self.FK_Invoice_Payment">
+      <End Role="Payment" EntitySet="Payment" />
+      <End Role="Invoice" EntitySet="Invoice" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Reservationz_Customerz" Association="Self.FK_Reservationz_Customerz">
+      <End Role="Customerz" EntitySet="Customerz" />
+      <End Role="Reservationz" EntitySet="Reservationz" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Reservationz_Invoice" Association="Self.FK_Reservationz_Invoice">
+      <End Role="Invoice" EntitySet="Invoice" />
+      <End Role="Reservationz" EntitySet="Reservationz" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Reservationz_Room" Association="Self.FK_Reservationz_Room">
+      <End Role="Room" EntitySet="Room" />
+      <End Role="Reservationz" EntitySet="Reservationz" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Room_RoomType" Association="Self.FK_Room_RoomType">
+      <End Role="RoomType" EntitySet="RoomType" />
+      <End Role="Room" EntitySet="Room" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
